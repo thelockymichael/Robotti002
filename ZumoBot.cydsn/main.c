@@ -53,7 +53,170 @@
  * @details  ** Enable global interrupt since Zumo library uses interrupts. **<br>&nbsp;&nbsp;&nbsp;CyGlobalIntEnable;<br>
 */
 
+#if 0
+
+    void zmain(void)
+{
+    
+    bool led = false;
+    
+    while(true)
+    {
+        if(SW1_Read() == 0) 
+        {
+            led = true;
+            if(led)
+            {
+                
+        printf("You pressed the button");
+        BatteryLed_Write(0);
+        vTaskDelay(500); // sleep (in an infinite loop)
+        BatteryLed_Write(1);
+        vTaskDelay(500); // sleep (in an infinite loop)
+        
+        BatteryLed_Write(0);
+        vTaskDelay(500); // sleep (in an infinite loop)
+        BatteryLed_Write(1);
+        vTaskDelay(500); // sleep (in an infinite loop)
+        
+                BatteryLed_Write(0);
+        vTaskDelay(500); // sleep (in an infinite loop)
+        BatteryLed_Write(1);
+        vTaskDelay(500); // sleep (in an infinite loop)
+        
+                BatteryLed_Write(0);
+        vTaskDelay(1500); // sleep (in an infinite loop)
+        BatteryLed_Write(1);
+        vTaskDelay(1500); // sleep (in an infinite loop)
+        
+                BatteryLed_Write(0);
+        vTaskDelay(1500); // sleep (in an infinite loop)
+        BatteryLed_Write(1);
+        vTaskDelay(1500); // sleep (in an infinite loop)
+        
+                BatteryLed_Write(0);
+        vTaskDelay(1500); // sleep (in an infinite loop)
+        BatteryLed_Write(1);
+        vTaskDelay(1500); // sleep (in an infinite loop)
+        
+        BatteryLed_Write(0);
+        vTaskDelay(500); // sleep (in an infinite loop)
+        BatteryLed_Write(1);
+        vTaskDelay(500); // sleep (in an infinite loop)
+        
+        BatteryLed_Write(0);
+        vTaskDelay(500); // sleep (in an infinite loop)
+        BatteryLed_Write(1);
+        vTaskDelay(500); // sleep (in an infinite loop)
+        
+        BatteryLed_Write(0);
+        vTaskDelay(500); // sleep (in an infinite loop)
+        BatteryLed_Write(1);
+        vTaskDelay(500); // sleep (in an infinite loop)
+        
+        BatteryLed_Write(0);
+        vTaskDelay(3000); // sleep (in an infinite loop)
+        
+        led = false;
+            }
+        }
+    }
+ }   
+#endif
+
+#if 0
+//battery level//
+void zmain(void)
+{
+    ADC_Battery_Start();        
+
+    int16 adcresult =0;
+    float volts = 0.0;
+    float volttiperbitti = 0.0;
+    bool IsPressed = false;
+    printf("\nBoot\n");
+
+    //BatteryLed_Write(1); // Switch led on 
+    BatteryLed_Write(0); // Switch led off 
+    //uint8 button;
+    //button = SW1_Read(); // read SW1 on pSoC board
+    // SW1_Read() returns zero when button is pressed
+    // SW1_Read() returns one when button is not pressed
+
+    for(;;)
+    {
+         
+        //char msg[80];
+        ADC_Battery_StartConvert(); // start sampling
+        if(ADC_Battery_IsEndConversion(ADC_Battery_WAIT_FOR_RESULT)) {   // wait for ADC converted value
+            adcresult = ADC_Battery_GetResult16(); // get the ADC value (0 - 4095)
+            // volts = ((4800/1023) * adcresult) / 1000;
+            volttiperbitti = 5.0 / 4095;
+            volts= volttiperbitti * adcresult;
+            // convert value to Volts
+            // you need to implement the conversion
+            
+            // Print both ADC results and converted value
+            printf("%d %f\r\n",adcresult, volts);
+        }
+        
+          if(SW1_Read() == 0 && volts > 4.0) 
+        {
+            IsPressed = true;
+        }
+        else if (volts < 4.0 && !IsPressed)
+        {
+            BatteryLed_Write(0);
+            vTaskDelay(500); // sleep (in an infinite loop)
+            BatteryLed_Write(1);
+            //vTaskDelay(500); // sleep (in an infinite loop)
+        }
+        else
+        {
+            IsPressed = false;
+        }
+        vTaskDelay(500);
+    }
+ }     
+#endif
+
 #if 1
+//motor
+void zmain(void)
+{
+    
+    motor_start();              // enable motor controller
+    motor_forward(0,0);         // set speed to zero to stop motors
+
+    vTaskDelay(3000);
+    
+    motor_forward(100,2000);     // moving forward
+    motor_turn(200,50,2000);     // turn
+    motor_turn(50,200,2000);     // turn
+    motor_backward(100,2000);    // moving backward
+     
+    motor_forward(0,0);         // stop motors
+
+    motor_stop();               // disable motor controller
+    
+    bool runTrack = false;
+    
+    for(;;)
+    {
+          if(SW1_Read() == 0)
+        {
+                    runTrack = true;
+            {
+        if (runTrack)
+        {
+            
+        }   
+        
+    }
+}
+#endif
+
+#if 0
 // Hello World!
 void zmain(void)
 {
@@ -83,7 +246,7 @@ void zmain(void)
     //fflush(stdout);
     scanf("%d", &age);
     
-    printf("You are [%s], age = %d\n", name, age);
+    printf("You are %s, age = %d\n", name, age);
 
     while(true)
     {
@@ -114,7 +277,7 @@ void zmain(void)
 
     for(;;)
     {
-        char msg[80];
+        //char msg[80];
         ADC_Battery_StartConvert(); // start sampling
         if(ADC_Battery_IsEndConversion(ADC_Battery_WAIT_FOR_RESULT)) {   // wait for ADC converted value
             adcresult = ADC_Battery_GetResult16(); // get the ADC value (0 - 4095)
